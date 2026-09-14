@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoAlert & Hazard Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
+    h1 { color: #2c3e50; }
+    .container { display: flex; gap: 20px; flex-wrap: wrap; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex: 1; min-width: 300px; }
+    form div { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, select, button { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { background-color: #27ae60; color: white; font-weight: bold; border: none; cursor: pointer; }
+    button:hover { background-color: #219150; }
+    ul { list-style: none; padding: 0; }
+    li { background: #eef9f1; border-left: 5px solid #27ae60; margin-bottom: 10px; padding: 10px; border-radius: 4px; }
+    li.High { border-color: #e74c3c; background: #fdf2f2; }
+    li.Medium { border-color: #f39c12; background: #fef9e7; }
+  </style>
+</head>
+<body>
+
+  <h1>EcoAlert & Hazard Dashboard</h1>
+  
+  <div class="container">
+    <!-- Form to Submit New Alert -->
+    <div class="card">
+      <h2>Report a Hazard</h2>
+      <form id="hazardForm">
+        <div>
+          <label for="location">Location / Zone:</label>
+          <input type="text" id="location" placeholder="e.g., Central Market Road" required>
+        </div>
+        <div>
+          <label for="hazardType">Hazard Type:</label>
+          <select id="hazardType">
+            <option value="Localized Flooding">Localized Flooding</option>
+            <option value="Severe Weather">Severe Weather</option>
+            <option value="Blocked Drainage">Blocked Drainage</option>
+            <option value="Waste Accumulation">Waste Accumulation</option>
+          </select>
+        </div>
+        <div>
+          <label for="severity">Severity Level:</label>
+          <select id="severity">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        <button type="submit">Submit Report</button>
+      </form>
+    </div>
+
+    <!-- Active Alerts Feed -->
+    <div class="card">
+      <h2>Active Environmental Alerts</h2>
+      <ul id="alertsList">
+        <li>Loading alerts...</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
