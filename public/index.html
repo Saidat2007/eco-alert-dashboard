@@ -1,65 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EcoAlert & Hazard Dashboard</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
-    h1 { color: #2c3e50; }
-    .container { display: flex; gap: 20px; flex-wrap: wrap; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex: 1; min-width: 300px; }
-    form div { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; }
-    input, select, button { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    button { background-color: #27ae60; color: white; font-weight: bold; border: none; cursor: pointer; }
-    button:hover { background-color: #219150; }
-    ul { list-style: none; padding: 0; }
-    li { background: #eef9f1; border-left: 5px solid #27ae60; margin-bottom: 10px; padding: 10px; border-radius: 4px; }
-    li.High { border-color: #e74c3c; background: #fdf2f2; }
-    li.Medium { border-color: #f39c12; background: #fef9e7; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: #2d3748;
+      line-height: 1.5;
+      padding: 20px;
+    }
+    header {
+      max-width: 1000px;
+      margin: 0 auto 25px auto;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 2rem; font-weight: 700; }
+    header p { font-size: 0.95rem; opacity: 0.9; margin-top: 5px; }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: #1a202c;
+      border-bottom: 2px solid #edf2f7;
+      padding-bottom: 10px;
+    }
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+      color: #4a5568;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    }
+    .btn-submit {
+      width: 100%;
+      background-color: #2b6cb0;
+      color: #ffffff;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn-submit:hover { background-color: #2c5282; }
+
+    .alerts-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .alert-card {
+      border-left: 5px solid #cbd5e0;
+      background-color: #f8fafc;
+      padding: 14px;
+      border-radius: 6px;
+      border-top: 1px solid #edf2f7;
+      border-right: 1px solid #edf2f7;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .alert-card.high { border-left-color: #e53e3e; }
+    .alert-card.medium { border-left-color: #dd6b20; }
+    .alert-card.low { border-left-color: #319795; }
+
+    .alert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .alert-title { font-weight: 700; font-size: 1rem; color: #1a202c; }
+    .badge {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-high { background-color: #fed7d7; color: #9b2c2c; }
+    .badge-medium { background-color: #feebc8; color: #9c4221; }
+    .badge-low { background-color: #e6fffa; color: #234e52; }
+
+    .alert-details { font-size: 0.88rem; color: #4a5568; }
+    .alert-meta {
+      font-size: 0.78rem;
+      color: #a0aec0;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      border-top: 1px dashed #e2e8f0;
+      padding-top: 6px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>EcoAlert & Hazard Dashboard</h1>
-  
+  <header>
+    <h1>EcoAlert & Hazard Dashboard</h1>
+    <p>Real-time Environmental Incident Reporting & Early Warning Platform</p>
+  </header>
+
   <div class="container">
-    <!-- Form to Submit New Alert -->
     <div class="card">
-      <h2>Report a Hazard</h2>
+      <h2>Report an Incident</h2>
       <form id="hazardForm">
-        <div>
-          <label for="location">Location / Zone:</label>
-          <input type="text" id="location" placeholder="e.g., Central Market Road" required>
+        
+        <div class="form-group">
+          <label for="location">Location / Area:</label>
+          <input 
+            type="text" 
+            id="location" 
+            placeholder="e.g., Central Market Road, Zone B" 
+            required 
+          />
         </div>
-        <div>
-          <label for="hazardType">Hazard Type:</label>
-          <select id="hazardType">
-            <option value="Localized Flooding">Localized Flooding</option>
-            <option value="Severe Weather">Severe Weather</option>
-            <option value="Blocked Drainage">Blocked Drainage</option>
-            <option value="Waste Accumulation">Waste Accumulation</option>
-          </select>
+
+        <div class="form-group">
+          <label for="hazardType">Hazard Category:</label>
+          <input 
+            type="text" 
+            id="hazardType" 
+            list="hazardOptions" 
+            placeholder="Type or select a hazard" 
+            required 
+          />
+          <datalist id="hazardOptions">
+            <option value="Localized Flooding">
+            <option value="Severe Weather">
+            <option value="Illegal Waste Dumping">
+            <option value="Plastic Pollution">
+            <option value="Deforestation">
+            <option value="Chemical Leak / Pollution">
+          </datalist>
         </div>
-        <div>
-          <label for="severity">Severity Level:</label>
+
+        <div class="form-group">
+          <label for="severity">Severity Risk Level:</label>
           <select id="severity">
-            <option value="Low">Low</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="High">High</option>
+            <option value="Low">Low Risk</option>
+            <option value="Medium">Medium Risk</option>
+            <option value="High" selected>High Risk</option>
           </select>
         </div>
-        <button type="submit">Submit Report</button>
+
+        <div class="form-group">
+          <label for="description">Detailed Description:</label>
+          <textarea 
+            id="description" 
+            rows="3" 
+            placeholder="Provide context, landmark details, or severity..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="contact">Contact / Email (Optional):</label>
+          <input 
+            type="text" 
+            id="contact" 
+            placeholder="e.g., reporter@example.com or phone" 
+          />
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Hazard Alert</button>
       </form>
     </div>
 
-    <!-- Active Alerts Feed -->
     <div class="card">
       <h2>Active Environmental Alerts</h2>
-      <ul id="alertsList">
-        <li>Loading alerts...</li>
-      </ul>
+      <div id="alertsList" class="alerts-container">
+        <p style="color: #718096; font-size: 0.9rem;">Loading alerts...</p>
+      </div>
     </div>
   </div>
 
